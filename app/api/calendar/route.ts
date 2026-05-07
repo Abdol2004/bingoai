@@ -41,6 +41,7 @@ export async function POST(req: NextRequest) {
       pillars = ['educational', 'engagement', 'value', 'ragebait'],
       postsPerDay = 1,
       voiceType = 'personal',
+      wordLimit = 120,
     } = body
 
     const preferredTime = Array.isArray(postTimes) ? postTimes[0] : postTimes
@@ -111,6 +112,7 @@ export async function POST(req: NextRequest) {
           imagePrompt: p.imagePrompt,
           contentPillar: p.contentPillar ?? pillars[i % pillars.length],
           voiceType,
+          wordLimit,
           scheduledAt,
           status: 'draft',
         }

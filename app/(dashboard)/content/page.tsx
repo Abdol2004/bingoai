@@ -16,6 +16,7 @@ export default function ContentPage() {
   const [topic, setTopic]         = useState('')
   const [pillar, setPillar]       = useState<Pillar>('value')
   const [voiceType, setVoiceType] = useState<'personal' | 'brand'>('personal')
+  const [wordLimit, setWordLimit] = useState(120)
   const [loading, setLoading]     = useState(false)
   const [error, setError]   = useState('')
   const [result, setResult] = useState<{
@@ -33,7 +34,7 @@ export default function ContentPage() {
       const res  = await fetch('/api/content/generate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ topic, pillar, voiceType }),
+        body: JSON.stringify({ topic, pillar, voiceType, wordLimit }),
       })
       const json = await res.json()
       if (!res.ok) throw new Error(json.error ?? 'Failed')
@@ -115,6 +116,20 @@ export default function ContentPage() {
                 <div className="text-xs mt-0.5 opacity-70">{p.desc}</div>
               </button>
             ))}
+          </div>
+        </div>
+
+        {/* Word limit */}
+        <div>
+          <label className="label">Word limit: <span style={{ color: 'var(--primary)' }}>{wordLimit} words</span></label>
+          <input
+            type="range" min={60} max={300} step={10}
+            value={wordLimit}
+            onChange={e => setWordLimit(Number(e.target.value))}
+            className="w-full accent-amber-500"
+          />
+          <div className="flex justify-between text-xs mt-1" style={{ color: 'var(--text-dim)' }}>
+            <span>60</span><span>120</span><span>180</span><span>240</span><span>300</span>
           </div>
         </div>
 

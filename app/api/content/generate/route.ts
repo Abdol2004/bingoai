@@ -10,6 +10,7 @@ const schema = z.object({
   topic:     z.string().min(3),
   pillar:    z.enum(['educational', 'engagement', 'ragebait', 'value']),
   voiceType: z.enum(['personal', 'brand']).optional().default('personal'),
+  wordLimit: z.number().min(60).max(300).optional().default(120),
 })
 
 export async function POST(req: NextRequest) {
@@ -26,12 +27,12 @@ export async function POST(req: NextRequest) {
     const workspace = await Workspace.findById(user?.workspaceId)
     if (!workspace) return NextResponse.json({ error: 'No workspace' }, { status: 404 })
 
-    const { topic, pillar, voiceType } = parsed.data
+    const { topic, pillar, voiceType, wordLimit } = parsed.data
 
     const brand = workspace.brandSettings ?? {}
 
     const [post, imageGuidance] = await Promise.all([
-      generateXPost({ topic, contentBrief: topic, pillar: pillar as ContentPillar, voiceType }),
+      generateXPost({ topic, contentBrief: topic, pillar: pillar as ContentPillar, voiceType, wordLimit }),
       generateImageGuidance({
         topic,
         pillar: pillar as ContentPillar,

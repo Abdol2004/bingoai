@@ -28,6 +28,7 @@ export async function POST(
       contentBrief: post.contentBrief || post.topic,
       pillar:       (post.contentPillar ?? 'value') as ContentPillar,
       voiceType:    (post.voiceType ?? 'personal') as 'personal' | 'brand',
+      wordLimit:    (post.wordLimit as number) ?? 120,
     })
 
     // Save caption so user can reuse it

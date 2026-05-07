@@ -9,6 +9,7 @@ export interface IPost extends Document {
   contentBrief: string
   contentPillar?: 'educational' | 'engagement' | 'ragebait' | 'value'
   voiceType?: 'personal' | 'brand'
+  wordLimit?: number
   caption?: string
   imagePrompt?: string
   scheduledAt: Date
@@ -29,6 +30,7 @@ const PostSchema = new Schema<IPost>(
     contentBrief: { type: String, default: '' },
     contentPillar: { type: String, enum: ['educational', 'engagement', 'ragebait', 'value'] },
     voiceType:     { type: String, enum: ['personal', 'brand'], default: 'personal' },
+    wordLimit:     { type: Number, default: 120 },
     caption: { type: String },
     imagePrompt: { type: String },
     scheduledAt: { type: Date, required: true },

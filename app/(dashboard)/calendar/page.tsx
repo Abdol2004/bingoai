@@ -69,6 +69,7 @@ export default function CalendarPage() {
   const [postTimes, setPostTimes]   = useState(['10:00', '18:00', '21:00'])
   const [selectedPillars, setSelectedPillars] = useState<Pillar[]>(['educational','engagement','value','ragebait'])
   const [voiceType, setVoiceType]             = useState<'personal' | 'brand' | null>(null)
+  const [wordLimit, setWordLimit]             = useState(120)
 
   const loadCalendars = useCallback(async () => {
     const res  = await fetch('/api/calendar')
@@ -124,6 +125,7 @@ export default function CalendarPage() {
           postsPerDay,
           pillars: selectedPillars,
           voiceType,
+          wordLimit,
         }),
       })
       const json = await res.json()
@@ -308,6 +310,22 @@ export default function CalendarPage() {
                     {p.label}
                   </button>
                 ))}
+              </div>
+            </div>
+
+            {/* Word limit */}
+            <div>
+              <label className="label">
+                Word limit per post: <span style={{ color: 'var(--primary)' }}>{wordLimit} words</span>
+              </label>
+              <input
+                type="range" min={60} max={300} step={10}
+                value={wordLimit}
+                onChange={e => setWordLimit(Number(e.target.value))}
+                className="w-full accent-amber-500"
+              />
+              <div className="flex justify-between text-xs mt-1" style={{ color: 'var(--text-dim)' }}>
+                <span>60</span><span>120</span><span>180</span><span>240</span><span>300</span>
               </div>
             </div>
 

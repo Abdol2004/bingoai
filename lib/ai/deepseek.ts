@@ -17,25 +17,24 @@ const PILLAR_GUIDE: Record<ContentPillar, string> = {
 
 function getSystemPrompt(voiceType: VoiceType = 'personal'): string {
   const voiceRule = voiceType === 'personal'
-    ? '- Write in first person: use "I", "me", "my" — never "we" or "our"'
-    : '- Write in first person plural: use "we", "our", "us" — never "I" or "me"'
+    ? '- First person: "I", "me", "my" — never "we" or "our"'
+    : '- First person plural: "we", "our", "us" — never "I" or "me"'
 
   return `You are a ghostwriter for an experienced professional on X (Twitter).
 
-STRICT RULES — every single one:
+STRICT RULES — follow every one:
 - HOOK: First line must stop the scroll. Specific, bold, or counterintuitive.
-- Keep it SHORT. Max 4-6 lines total. Never more than 80 words.
-- Short punchy sentences. One idea per line. Heavy line breaks.
-- Sound like a real opinionated person. Smart but not stiff.
+- Write complete thoughts. No one-word or two-word sentence fragments.
+- Medium sentence length — full ideas per line. Not too short, not too long.
+- If you must list anything, use arrows (→) — never numbers, never bullet points, never hyphens.
 ${voiceRule}
 - NO ellipsis (...) anywhere. Ever.
 - NO emojis. Not one.
-- NO hyphens. Use commas or full stops instead.
+- NO hyphens as punctuation. Use commas or full stops instead.
 - NO bold markdown (**text**).
 - NO hashtags.
-- NO bullet points or numbered lists.
-- NO filler openers: "In today's world", "Let's be honest", "It's no secret", "Hot take:".
-- Use contractions. Vary sentence length.
+- NO filler openers: "In today's world", "Let's be honest", "Hot take:", "Let's dive in".
+- Use contractions. Sound like a real person.
 - End on a strong POV or a question that sparks replies.
 - NEVER sound like AI wrote it.`
 }
@@ -44,7 +43,8 @@ function cleanPost(text: string): string {
   return text
     .replace(/\*\*(.+?)\*\*/g, '$1')
     .replace(/\*(.+?)\*/g, '$1')
-    .replace(/^[-–—]\s+/gm, '')
+    .replace(/^[-–—]\s+/gm, '→ ')      // convert hyphens to arrows
+    .replace(/^\d+\.\s+/gm, '→ ')      // convert numbered lists to arrows
     .replace(/\.\.\./g, '')
     .replace(/…/g, '')
     .replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, '')
@@ -57,8 +57,9 @@ export async function generateXPost(params: {
   contentBrief: string
   pillar: ContentPillar
   voiceType?: VoiceType
+  wordLimit?: number
 }): Promise<string> {
-  const { topic, contentBrief, pillar, voiceType = 'personal' } = params
+  const { topic, contentBrief, pillar, voiceType = 'personal', wordLimit = 120 } = params
 
   const res = await client.chat.completions.create({
     model: 'deepseek-chat',
@@ -72,29 +73,16 @@ Topic: ${topic}
 Brief: ${contentBrief}
 Type: ${pillar}
 Goal: ${PILLAR_GUIDE[pillar]}
+Word limit: ${wordLimit} words maximum
 
-Return the post only. Nothing else. Keep it under 80 words.`,
+Return the post only. Nothing else.`,
       },
     ],
     temperature: 0.92,
-    max_tokens: 300,
+    max_tokens: Math.min(600, wordLimit * 6),
   })
 
   return cleanPost(res.choices?.[0]?.message.content?.trim() ?? '')
-}
-
-const STYLE_MAP: Record<ContentPillar, string> = {
-  educational: 'clean minimal design, device mockup style, professional and structured',
-  engagement:  'bold typographic poster, high contrast, one dominant visual, eye-catching',
-  ragebait:    'stark brutalist graphic, extreme contrast, raw and direct, confrontational',
-  value:       'premium minimal, generous white space, refined color blocking, magazine feel',
-}
-
-const COMPOSITION_MAP: Record<ContentPillar, string> = {
-  educational: 'device mockup centered — laptop or phone frame with the screen area clearly visible for content placement',
-  engagement:  'asymmetric layout, strong diagonal energy, main visual takes 60% of frame',
-  ragebait:    'full-bleed background, single dominant element, nothing competing for attention',
-  value:       'balanced negative space, single strong visual metaphor, rule-of-thirds',
 }
 
 export async function generateImageGuidance(params: {
@@ -106,31 +94,37 @@ export async function generateImageGuidance(params: {
 }): Promise<{ type: 'prompt' | 'idea'; content: string }> {
   const { topic, pillar, brandColors, logoDescription, preferredSize = '1024x1024' } = params
 
+  const pillarStyle: Record<ContentPillar, string> = {
+    educational: 'clean editorial design, structured, professional, clear focal point',
+    engagement:  'bold typographic style, high contrast, eye-catching, one dominant visual element',
+    ragebait:    'stark brutalist graphic, extreme contrast between light and dark, confrontational composition',
+    value:       'premium minimal design, generous negative space, sophisticated, magazine-quality',
+  }
+
   const res = await client.chat.completions.create({
     model: 'deepseek-chat',
     messages: [
       {
         role: 'system',
-        content: 'You are a senior art director. Write image prompts that produce stunning social media graphics. For educational posts always suggest a device mockup (MacBook, iPhone, iPad) so the user can screenshot their content and embed it into the device screen.',
+        content: 'You are a senior art director at a top creative agency. Write image prompts that produce stunning, ultra-sharp social media visuals. Every prompt should feel like it came from a professional creative brief.',
       },
       {
         role: 'user',
-        content: `Write a DALL-E 3 / ChatGPT image prompt for a social media post about: "${topic}"
+        content: `Write a DALL-E 3 / ChatGPT image prompt for this X (Twitter) post topic: "${topic}"
 
-Design style: ${STYLE_MAP[pillar]}
-Composition: ${COMPOSITION_MAP[pillar]}
+Style: ${pillarStyle[pillar]}
 Format: ${preferredSize}
-Platform: X (Twitter)
-
-${pillar === 'educational' ? `This is an EDUCATIONAL post. The image MUST be a device mockup (MacBook Pro on a minimal desk, or a floating iPhone/iPad). The screen area should appear as a clean glowing surface — the user will screenshot their content and embed it there. Make the mockup photorealistic. Describe the device angle, desk props, and lighting. Leave the screen area intentionally simple/bright so content can be placed on it.` : ''}
+Audience: Professional X (Twitter)
 
 Requirements:
-- No text or words in the image
-- High resolution, ultra detailed, professional
-- Works well with a logo overlay
-- Specific about lighting, textures, colors, mood
+- Ultra-sharp, high resolution, professional quality
+- No text, words, or letters in the image
+- Strong visual composition with clear focal point
+- Specific about lighting, textures, colors, and mood
+- The image should work with a logo overlaid
+- Think top creative agency output
 
-Return only the prompt. 2-3 sentences.`,
+Return only the image prompt. 2-3 rich, specific sentences.`,
       },
     ],
     temperature: 0.85,
@@ -152,31 +146,28 @@ function buildBrandBlock(params: {
   const { brandColors, logoDescription, preferredSize = '1024x1024', pillar } = params
 
   const logoPositions: Record<ContentPillar, string> = {
-    educational: 'bottom-right corner of the image, outside the device screen',
+    educational: 'bottom-right corner, small and clean',
     engagement:  'bottom-left corner, give it breathing room',
     ragebait:    'top-right corner, small',
-    value:       'bottom-center, subtle',
+    value:       'bottom-center or bottom-right, subtle',
   }
 
-  const screenshotNote = pillar === 'educational'
-    ? `\nScreenshot tip: Take a screenshot of your content (app, tweet, chart, anything) → open in Canva or Photoshop → place it on the device screen using a frame/smart object → export as final image.`
-    : ''
-
-  const lines: string[] = ['--- Add manually when uploading to ChatGPT or DALL-E ---']
+  const lines: string[] = ['--- Add manually when uploading to ChatGPT ---']
 
   if (brandColors) {
-    lines.push(`Colors: Use "${brandColors}" — primary color on the main focal element, secondary as background or accent.`)
+    lines.push(`Colors: Use "${brandColors}" — primary as dominant accent, secondary as background or shadow.`)
   } else {
-    lines.push(`Colors: Tell ChatGPT your brand colors — e.g. "use [color] as the dominant accent".`)
+    lines.push(`Colors: Tell ChatGPT your brand colors — e.g. "use [your color] as the dominant accent".`)
   }
 
   if (logoDescription) {
     lines.push(`Logo: Upload your logo (${logoDescription}) → place it ${logoPositions[pillar]}. Transparent background works best.`)
   } else {
-    lines.push(`Logo: Upload your logo → tell ChatGPT "place the logo ${logoPositions[pillar]}, keep it clean and proportional".`)
+    lines.push(`Logo: Upload your logo file → tell ChatGPT "place the logo ${logoPositions[pillar]}, keep it clean".`)
   }
 
-  lines.push(`Size: ${preferredSize}.${screenshotNote}`)
+  lines.push(`Size: ${preferredSize}.`)
+  lines.push(`Tip: You can also upload a photo of a person, product, or scene and ask ChatGPT to incorporate it into this design.`)
 
   return lines.join('\n')
 }
