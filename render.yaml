@@ -1,0 +1,51 @@
+yservices:
+  - type: web
+    name: contentpilot-web
+    env: node
+    region: oregon
+    plan: free
+    buildCommand: npm install && npm run build
+    startCommand: npm run start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NEXT_PUBLIC_APP_URL
+        fromService:
+          type: web
+          name: contentpilot-web
+          envVarKey: RENDER_EXTERNAL_URL
+      - key: JWT_SECRET
+        generateValue: true
+      - key: MONGODB_URI
+        sync: false
+      - key: DEEPSEEK_API_KEY
+        sync: false
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: TELEGRAM_BOT_TOKEN
+        sync: false
+      - key: DISCORD_BOT_TOKEN
+        sync: false
+
+  - type: worker
+    name: contentpilot-worker
+    env: node
+    region: oregon
+    plan: free
+    buildCommand: npm install
+    startCommand: npm run worker
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: MONGODB_URI
+        sync: false
+      - key: DEEPSEEK_API_KEY
+        sync: false
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: TELEGRAM_BOT_TOKEN
+        sync: false
+      - key: DISCORD_BOT_TOKEN
+        sync: false
+      - key: NEXT_PUBLIC_APP_URL
+        sync: false
