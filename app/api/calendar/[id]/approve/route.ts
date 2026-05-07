@@ -50,7 +50,7 @@ export async function POST(_req: NextRequest, { params }: { params: Promise<{ id
       const workspace = await Workspace.findById(user.workspaceId)
       const enabledPlatforms = workspace
         ? Object.entries(workspace.platforms)
-            .filter(([, v]) => v.enabled)
+            .filter(([, v]) => (v as { enabled?: boolean }).enabled)
             .map(([k]) => k)
         : []
 
