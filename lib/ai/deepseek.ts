@@ -37,11 +37,11 @@ STRICT RULES — break any of these and the post is rejected:
 
 function cleanPost(text: string): string {
   return text
-    .replace(/\*\*(.+?)\*\*/g, '$1')                    // remove bold
-    .replace(/^[-–—]\s+/gm, '')                          // remove list hyphens
-    .replace(/[\u{1F300}-\u{1FFFF}]/gu, '')              // remove emojis (range 1)
-    .replace(/[\u{2600}-\u{27BF}]/gu, '')                // remove emojis (range 2)
-    .replace(/#\w+/g, '')                                 // remove hashtags
+    .replace(/\*\*(.+?)\*\*/g, '$1')
+    .replace(/^[-–—]\s+/gm, '')
+    .replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, '')  // remove emoji surrogate pairs
+    .replace(/[☀-➿⬀-⯿]/g, '')    // remove misc symbols
+    .replace(/#\w+/g, '')
     .trim()
 }
 
