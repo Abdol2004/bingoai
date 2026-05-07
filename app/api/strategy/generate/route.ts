@@ -22,7 +22,7 @@ export async function POST() {
     }
 
     const platforms = Object.entries(workspace.platforms)
-      .filter(([, v]) => v.enabled)
+      .filter(([, v]) => (v as { enabled?: boolean }).enabled)
       .map(([k]) => k)
 
     if (platforms.length === 0) {
