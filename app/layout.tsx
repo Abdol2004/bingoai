@@ -1,4 +1,4 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import { Baloo_2, Nunito } from 'next/font/google'
 import './globals.css'
 import { AuthProvider } from '@/contexts/AuthContext'
@@ -20,9 +20,13 @@ const nunito = Nunito({
 
 export const metadata: Metadata = {
   title: 'Bingo — Your AI Content Dog',
-  description:
-    'Bingo fetches your content strategy, writes your posts, generates images, and auto-posts everywhere. Good boy.',
-  icons: { icon: '/favicon.ico' },
+  description: 'Bingo fetches your content strategy, writes your posts, generates images, and auto-posts everywhere.',
+}
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
