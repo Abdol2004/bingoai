@@ -49,8 +49,8 @@ export async function POST(_req: NextRequest, { params }: { params: Promise<{ id
     if (user?.telegramChatId) {
       const workspace = await Workspace.findById(user.workspaceId)
       const enabledPlatforms = workspace
-        ? Object.entries(workspace.platforms)
-            .filter(([, v]) => (v as { enabled?: boolean }).enabled)
+        ? (Object.entries(workspace.platforms) as [string, { enabled?: boolean }][])
+            .filter(([, v]) => v?.enabled)
             .map(([k]) => k)
         : []
 

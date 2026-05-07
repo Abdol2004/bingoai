@@ -72,7 +72,7 @@ Return the post text only. Nothing else.`,
     max_tokens: 500,
   })
 
-  return cleanPost(res.choices[0].message.content?.trim() ?? '')
+  return cleanPost(res.choices?.[0]?.message.content?.trim() ?? '')
 }
 
 const STYLE_MAP: Record<ContentPillar, string> = {
@@ -133,7 +133,7 @@ Return only the image prompt. 2-3 sentences. Be specific about colors, textures,
     max_tokens: 250,
   })
 
-  const basePrompt = res.choices[0].message.content?.trim() ?? ''
+  const basePrompt = res.choices?.[0]?.message.content?.trim() ?? ''
 
   // Build the brand integration block
   const brandBlock = buildBrandBlock({ brandColors, logoDescription, preferredSize, pillar })

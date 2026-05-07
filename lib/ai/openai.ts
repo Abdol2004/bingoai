@@ -11,7 +11,7 @@ export async function generateImage(prompt: string): Promise<string> {
     size: '1024x1024',
     quality: 'standard',
   })
-  const url = res.data[0].url
+  const url = res.data?.[0]?.url
   if (!url) throw new Error('No image URL returned from DALL-E 3')
   return url
 }

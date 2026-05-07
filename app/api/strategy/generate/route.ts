@@ -21,8 +21,8 @@ export async function POST() {
       return NextResponse.json({ error: 'Please set your niche first' }, { status: 400 })
     }
 
-    const platforms = Object.entries(workspace.platforms)
-      .filter(([, v]) => (v as { enabled?: boolean }).enabled)
+    const platforms = (Object.entries(workspace.platforms) as [string, { enabled?: boolean }][])
+      .filter(([, v]) => v?.enabled)
       .map(([k]) => k)
 
     if (platforms.length === 0) {

@@ -65,7 +65,7 @@ Rules:
     max_tokens: 900,
   })
 
-  const raw = res.choices[0].message.content?.trim() ?? ''
+  const raw = res.choices?.[0]?.message.content?.trim() ?? ''
   return raw.replace(/\*\*(.+?)\*\*/g, '$1').replace(/\*(.+?)\*/g, '$1')
 }
 
@@ -151,7 +151,7 @@ Rules:
     max_tokens: 4096,
   })
 
-  const raw = res.choices[0].message.content ?? ''
+  const raw = res.choices?.[0]?.message.content ?? ''
   const cleaned = raw.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim()
   try {
     return JSON.parse(cleaned)
@@ -210,7 +210,7 @@ Return JSON:
     max_tokens: 2048,
   })
 
-  const raw = res.choices[0].message.content ?? ''
+  const raw = res.choices?.[0]?.message.content ?? ''
   const cleaned = raw.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim()
   try {
     return JSON.parse(cleaned)

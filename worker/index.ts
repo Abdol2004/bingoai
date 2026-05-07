@@ -52,7 +52,7 @@ async function generateCaption(topic: string, contentBrief: string, tone: string
     temperature: 0.8,
     max_tokens: 512,
   })
-  return res.choices[0].message.content?.trim() ?? topic
+  return res.choices?.[0]?.message.content?.trim() ?? topic
 }
 
 async function generateImage(prompt: string): Promise<Buffer> {
@@ -63,7 +63,8 @@ async function generateImage(prompt: string): Promise<Buffer> {
     size: '1024x1024',
     quality: 'standard',
   })
-  const url = res.data[0].url!
+  const url = res.data?.[0]?.url
+  if (!url) throw new Error('No image URL returned from DALL-E 3')
   const imgRes = await axios.get(url, { responseType: 'arraybuffer', timeout: 30000 })
   return Buffer.from(imgRes.data)
 }
