@@ -4,9 +4,10 @@ import { useState, useEffect, useCallback } from 'react'
 import { formatDate, formatTime, getStatusColor } from '@/lib/utils'
 import {
   PawPrint, Plus, Check, Trash2, Pencil, X as XIcon,
-  Loader2, CalendarDays, Copy, Zap,
+  CalendarDays, Copy, Zap,
 } from 'lucide-react'
 import { format, addDays } from 'date-fns'
+import DogLoader from '@/components/DogLoader'
 
 type Pillar = 'educational' | 'engagement' | 'ragebait' | 'value'
 
@@ -210,7 +211,7 @@ export default function CalendarPage() {
           <p className="mt-1 text-sm" style={{ color: 'var(--text-muted)' }}>Plan, preview captions, and approve your X posts.</p>
         </div>
         <button onClick={() => { setVoiceType(null); setShowGenModal(true) }} className="btn-primary" disabled={generating}>
-          {generating ? <><Loader2 size={14} className="animate-spin" /> Generating...</> : <><Plus size={14} /> New calendar</>}
+          {generating ? <DogLoader label="Generating..." /> : <><Plus size={14} /> New calendar</>}
         </button>
       </div>
 
@@ -218,9 +219,8 @@ export default function CalendarPage() {
 
       {/* ── Generate modal ── */}
       {showGenModal && (
-        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 px-4">
-          <div className="w-full max-w-lg rounded-2xl p-4 md:p-6 space-y-5 overflow-y-auto max-h-[92vh]"
-               style={{ background: 'var(--bg-card)', border: '1px solid var(--border)' }}>
+        <div className="modal-overlay" onClick={e => e.target === e.currentTarget && setShowGenModal(false)}>
+          <div className="modal-sheet space-y-5">
             <div className="flex items-center justify-between">
               <h2 className="font-display font-700 text-xl" style={{ color: 'var(--text)' }}>Generate calendar</h2>
               <button onClick={() => setShowGenModal(false)} style={{ color: 'var(--text-muted)' }}><XIcon size={18} /></button>
@@ -331,7 +331,7 @@ export default function CalendarPage() {
 
             <div className="flex gap-3 pt-1">
               <button onClick={generateCalendar} className="btn-primary flex-1 justify-center">
-                <PawPrint size={14} /> Generate
+                <PawPrint size={14} /> Fetch calendar
               </button>
               <button onClick={() => setShowGenModal(false)} className="btn-secondary">Cancel</button>
             </div>
@@ -381,9 +381,7 @@ export default function CalendarPage() {
                 <div className="flex items-center gap-2 shrink-0">
                   {selectedCal.status === 'pending_approval' && (
                     <button onClick={approveCalendar} disabled={approving} className="btn-primary text-sm">
-                      {approving
-                        ? <><Loader2 size={13} className="animate-spin" /> Approving...</>
-                        : <><Check size={13} /> Approve week</>}
+                      {approving ? <DogLoader label="Approving..." /> : <><Check size={13} /> Approve week</>}
                     </button>
                   )}
                   <button onClick={() => deleteCalendar(selectedCal._id)} className="btn-danger text-sm">
@@ -443,7 +441,7 @@ export default function CalendarPage() {
                           className="btn-secondary text-xs py-1.5 px-3 flex items-center gap-1.5"
                         >
                           {captionLoading === post._id
-                            ? <><Loader2 size={12} className="animate-spin" /> Writing...</>
+                            ? <DogLoader size="xs" label="Writing..." />
                             : <><Zap size={12} /> Generate caption</>}
                         </button>
                       )}
@@ -458,9 +456,8 @@ export default function CalendarPage() {
 
       {/* Edit post modal */}
       {editPost && (
-        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 px-4">
-          <div className="w-full max-w-lg rounded-2xl p-4 md:p-6 space-y-4"
-               style={{ background: 'var(--bg-card)', border: '1px solid var(--border)' }}>
+        <div className="modal-overlay" onClick={e => e.target === e.currentTarget && setEditPost(null)}>
+          <div className="modal-sheet space-y-4">
             <div className="flex items-center justify-between">
               <h3 className="font-display font-700 text-lg" style={{ color: 'var(--text)' }}>Edit post</h3>
               <button onClick={() => setEditPost(null)} style={{ color: 'var(--text-muted)' }}><XIcon size={18} /></button>

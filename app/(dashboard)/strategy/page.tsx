@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
-import { PawPrint, Loader2, RefreshCw, Palette, Target, Megaphone } from 'lucide-react'
+import { PawPrint, RefreshCw, Palette, Target, Megaphone } from 'lucide-react'
+import DogLoader from '@/components/DogLoader'
 
 const TONES = ['professional', 'casual', 'humorous', 'inspirational', 'educational'] as const
 const SIZES = [
@@ -292,11 +293,11 @@ export default function StrategyPage() {
       {/* Actions */}
       <div className="flex gap-3">
         <button onClick={save} className="btn-secondary" disabled={saving}>
-          {saving ? <><Loader2 size={14} className="animate-spin" /> Saving...</> : 'Save settings'}
+          {saving ? <DogLoader size="xs" label="Saving..." /> : 'Save settings'}
         </button>
         <button onClick={generate} className="btn-primary" disabled={generating || !niche}>
           {generating
-            ? <><Loader2 size={14} className="animate-spin" /> Generating...</>
+            ? <DogLoader label="Generating..." />
             : <><PawPrint size={14} /> Generate strategy</>}
         </button>
       </div>

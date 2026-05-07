@@ -3,7 +3,8 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { PawPrint, User, Mail, Lock, ArrowRight, Loader2 } from 'lucide-react'
+import { PawPrint, User, Mail, Lock, ArrowRight } from 'lucide-react'
+import DogLoader from '@/components/DogLoader'
 import { useAuth } from '@/contexts/AuthContext'
 
 export default function RegisterPage() {
@@ -100,7 +101,7 @@ export default function RegisterPage() {
 
             <button type="submit" className="btn-primary w-full justify-center py-3 mt-1" disabled={loading}>
               {loading
-                ? <><Loader2 size={16} className="animate-spin" /> Creating account...</>
+                ? <DogLoader label="Creating account..." />
                 : <><PawPrint size={16} /> Adopt Bingo — it&apos;s free</>}
             </button>
           </form>

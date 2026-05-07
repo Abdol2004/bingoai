@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
-import { PawPrint, Send, Check, Loader2, ExternalLink } from 'lucide-react'
+import { PawPrint, Send, Check, ExternalLink } from 'lucide-react'
+import DogLoader from '@/components/DogLoader'
 
 export default function ConnectPage() {
   const { user, refresh } = useAuth()
@@ -143,7 +144,7 @@ export default function ConnectPage() {
         <div className="flex gap-3">
           <button onClick={save} disabled={saving} className="btn-primary">
             {saving
-              ? <><Loader2 size={14} className="animate-spin" /> Saving...</>
+              ? <DogLoader label="Saving..." />
               : <><PawPrint size={14} /> Save Chat ID</>}
           </button>
           <button onClick={registerWebhook} disabled={registering} className="btn-secondary text-sm">

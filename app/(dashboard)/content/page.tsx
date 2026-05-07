@@ -1,7 +1,8 @@
 'use client'
 
 import { useState } from 'react'
-import { PawPrint, Copy, Check, Lightbulb, ImageIcon, Loader2 } from 'lucide-react'
+import { PawPrint, Copy, Check, Lightbulb, ImageIcon } from 'lucide-react'
+import DogLoader from '@/components/DogLoader'
 
 type Pillar = 'educational' | 'engagement' | 'ragebait' | 'value'
 
@@ -138,9 +139,7 @@ export default function ContentPage() {
           disabled={loading || !topic.trim()}
           className="btn-primary w-full justify-center py-3"
         >
-          {loading
-            ? <><Loader2 size={15} className="animate-spin" /> Bingo is writing...</>
-            : <><PawPrint size={15} /> Generate post</>}
+          {loading ? <DogLoader label="Bingo is writing..." /> : <><PawPrint size={15} /> Generate post</>}
         </button>
       </div>
 
