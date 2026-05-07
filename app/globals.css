@@ -342,3 +342,45 @@ h1, h2, h3, h4, h5, h6, .font-display {
   transition: color 0.15s;
 }
 .nav-link-muted:hover { color: var(--text); }
+
+/* ── Mobile ─────────────────────────────────────────── */
+
+/* Prevent horizontal overflow on mobile */
+html, body { overflow-x: hidden; }
+
+/* Minimum tap target size for all interactive elements */
+button, a, [role="button"] { min-height: 44px; }
+
+/* Override min-height for badge-style elements */
+.badge { min-height: unset; }
+
+/* Mobile-friendly input sizing — prevent iOS zoom */
+@media (max-width: 768px) {
+  .input {
+    font-size: 16px; /* prevents iOS auto-zoom on focus */
+  }
+
+  .btn-primary,
+  .btn-secondary,
+  .btn-danger {
+    min-height: 46px;
+  }
+
+  /* Tighter card padding on small screens */
+  .card {
+    padding: 16px;
+    border-radius: 14px;
+  }
+}
+
+/* Safe area for notched phones */
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  .safe-bottom {
+    padding-bottom: calc(env(safe-area-inset-bottom) + 16px);
+  }
+}
+
+/* Smooth scrolling on iOS */
+main, .overflow-auto, .overflow-y-auto {
+  -webkit-overflow-scrolling: touch;
+}

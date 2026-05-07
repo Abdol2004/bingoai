@@ -37,11 +37,10 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 page-enter"
+    <div className="min-h-screen flex items-center justify-center px-4 py-8 page-enter"
          style={{ background: 'var(--bg)' }}>
 
-      {/* Background paw prints */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none select-none">
+      <div className="fixed inset-0 overflow-hidden pointer-events-none select-none hidden sm:block">
         {[
           { size: 50, top: '15%', left: '4%',  opacity: 0.04, delay: '0.2s' },
           { size: 70, top: '65%', left: '6%',  opacity: 0.03, delay: '0.8s' },
@@ -55,37 +54,27 @@ export default function RegisterPage() {
         ))}
       </div>
 
-      <div className="w-full max-w-md relative">
-        {/* Logo */}
-        <div className="text-center mb-10">
+      <div className="w-full max-w-sm relative">
+        <div className="text-center mb-8">
           <Link href="/" className="inline-flex flex-col items-center gap-3 logo-wag group">
-            <div className="w-16 h-16 rounded-2xl flex items-center justify-center shadow-lg"
-                 style={{ background: 'linear-gradient(135deg,#f59e0b,#d97706)',
-                          boxShadow: '0 8px 32px rgba(245,158,11,0.35)' }}>
-              <PawPrint size={30} className="wag-icon" style={{ color: '#0d0804' }} strokeWidth={2.5} />
+            <div className="w-14 h-14 md:w-16 md:h-16 rounded-2xl flex items-center justify-center shadow-lg"
+                 style={{ background: 'linear-gradient(135deg,#f59e0b,#d97706)', boxShadow: '0 8px 32px rgba(245,158,11,0.35)' }}>
+              <PawPrint size={26} className="wag-icon" style={{ color: '#0d0804' }} strokeWidth={2.5} />
             </div>
-            <span className="font-display font-extrabold text-3xl" style={{ color: 'var(--primary)' }}>
-              Bingo
-            </span>
+            <span className="font-display font-extrabold text-2xl md:text-3xl" style={{ color: 'var(--primary)' }}>Bingo</span>
           </Link>
-          <h1 className="font-display font-bold text-2xl mt-4" style={{ color: 'var(--text)' }}>
-            Get a new best friend
-          </h1>
-          <p className="text-sm mt-1" style={{ color: 'var(--text-muted)' }}>
-            Bingo is ready to fetch your content. Free to start.
-          </p>
+          <h1 className="font-display font-bold text-xl md:text-2xl mt-4" style={{ color: 'var(--text)' }}>Get a new best friend</h1>
+          <p className="text-sm mt-1" style={{ color: 'var(--text-muted)' }}>Bingo is ready to fetch your content. Free to start.</p>
         </div>
 
-        {/* Card */}
         <div className="card card-glow">
-          <form onSubmit={handleSubmit} className="space-y-5">
+          <form onSubmit={handleSubmit} className="space-y-4">
             {error && <div className="alert-error">{error}</div>}
 
             <div>
               <label className="label">Your name</label>
               <div className="relative">
-                <User size={16} className="absolute left-4 top-1/2 -translate-y-1/2"
-                     style={{ color: 'var(--text-dim)' }} />
+                <User size={16} className="absolute left-4 top-1/2 -translate-y-1/2" style={{ color: 'var(--text-dim)' }} />
                 <input type="text" className="input pl-10" placeholder="Alex Johnson"
                        value={name} onChange={e => setName(e.target.value)} required />
               </div>
@@ -94,8 +83,7 @@ export default function RegisterPage() {
             <div>
               <label className="label">Email</label>
               <div className="relative">
-                <Mail size={16} className="absolute left-4 top-1/2 -translate-y-1/2"
-                     style={{ color: 'var(--text-dim)' }} />
+                <Mail size={16} className="absolute left-4 top-1/2 -translate-y-1/2" style={{ color: 'var(--text-dim)' }} />
                 <input type="email" className="input pl-10" placeholder="you@example.com"
                        value={email} onChange={e => setEmail(e.target.value)} required />
               </div>
@@ -104,16 +92,13 @@ export default function RegisterPage() {
             <div>
               <label className="label">Password</label>
               <div className="relative">
-                <Lock size={16} className="absolute left-4 top-1/2 -translate-y-1/2"
-                     style={{ color: 'var(--text-dim)' }} />
+                <Lock size={16} className="absolute left-4 top-1/2 -translate-y-1/2" style={{ color: 'var(--text-dim)' }} />
                 <input type="password" className="input pl-10" placeholder="Min 8 characters"
-                       value={password} onChange={e => setPassword(e.target.value)}
-                       minLength={8} required />
+                       value={password} onChange={e => setPassword(e.target.value)} minLength={8} required />
               </div>
             </div>
 
-            <button type="submit" className="btn-primary w-full justify-center py-3 mt-2"
-                    disabled={loading}>
+            <button type="submit" className="btn-primary w-full justify-center py-3 mt-1" disabled={loading}>
               {loading
                 ? <><Loader2 size={16} className="animate-spin" /> Creating account...</>
                 : <><PawPrint size={16} /> Adopt Bingo — it&apos;s free</>}
@@ -123,10 +108,7 @@ export default function RegisterPage() {
 
         <p className="text-center text-sm mt-6" style={{ color: 'var(--text-muted)' }}>
           Already have an account?{' '}
-          <Link href="/login" style={{ color: 'var(--primary)' }}
-                className="font-semibold hover:underline">
-            Sign in
-          </Link>
+          <Link href="/login" style={{ color: 'var(--primary)' }} className="font-semibold hover:underline">Sign in</Link>
         </p>
       </div>
     </div>

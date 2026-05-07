@@ -115,7 +115,7 @@ export default function CompetitorsPage() {
       {showForm && (
         <div className="card space-y-4">
           <h2 className="font-semibold">Add competitor</h2>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="label">Name</label>
               <input
@@ -216,7 +216,7 @@ export default function CompetitorsPage() {
                     <div className="mt-4 space-y-4 border-t border-gray-800 pt-4">
                       <p className="text-sm text-gray-300">{c.insights.summary}</p>
 
-                      <div className="grid grid-cols-2 gap-4">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
                           <p className="text-xs text-gray-500 mb-1">Posting frequency</p>
                           <p className="text-sm">{c.insights.postingFrequency}</p>

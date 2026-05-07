@@ -197,7 +197,7 @@ export default function CalendarPage() {
   )
 
   return (
-    <div className="space-y-6 page-enter">
+    <div className="space-y-5 md:space-y-6 page-enter">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
@@ -214,7 +214,7 @@ export default function CalendarPage() {
       {/* ── Generate modal ── */}
       {showGenModal && (
         <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 px-4">
-          <div className="w-full max-w-lg rounded-2xl p-6 space-y-5 overflow-y-auto max-h-[90vh]"
+          <div className="w-full max-w-lg rounded-2xl p-4 md:p-6 space-y-5 overflow-y-auto max-h-[92vh]"
                style={{ background: 'var(--bg-card)', border: '1px solid var(--border)' }}>
             <div className="flex items-center justify-between">
               <h2 className="font-display font-700 text-xl" style={{ color: 'var(--text)' }}>Generate calendar</h2>
@@ -413,7 +413,7 @@ export default function CalendarPage() {
       {/* Edit post modal */}
       {editPost && (
         <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 px-4">
-          <div className="w-full max-w-lg rounded-2xl p-6 space-y-4"
+          <div className="w-full max-w-lg rounded-2xl p-4 md:p-6 space-y-4"
                style={{ background: 'var(--bg-card)', border: '1px solid var(--border)' }}>
             <div className="flex items-center justify-between">
               <h3 className="font-display font-700 text-lg" style={{ color: 'var(--text)' }}>Edit post</h3>
