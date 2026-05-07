@@ -7,7 +7,7 @@
  */
 
 import mongoose from 'mongoose'
-import Agenda from 'agenda'
+import Agenda, { Job } from 'agenda'
 import { Client, GatewayIntentBits, AttachmentBuilder } from 'discord.js'
 import { Telegraf } from 'telegraf'
 
@@ -138,7 +138,7 @@ async function postToTelegram(chatId: string, caption: string, imageBuffer: Buff
 }
 
 // ── Main job handler ───────────────────────────────────────────────────────────
-async function handleGenerateAndPost(job: Agenda.Job) {
+async function handleGenerateAndPost(job: Job) {
   const { postId } = job.attrs.data as { postId: string }
   console.log(`[worker] Processing post ${postId}`)
 
