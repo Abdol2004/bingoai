@@ -7,8 +7,9 @@ import { generateXPost, generateImageGuidance, type ContentPillar } from '@/lib/
 import { z } from 'zod'
 
 const schema = z.object({
-  topic: z.string().min(3),
-  pillar: z.enum(['educational', 'engagement', 'ragebait', 'value']),
+  topic:     z.string().min(3),
+  pillar:    z.enum(['educational', 'engagement', 'ragebait', 'value']),
+  voiceType: z.enum(['personal', 'brand']).optional().default('personal'),
 })
 
 export async function POST(req: NextRequest) {
@@ -25,12 +26,12 @@ export async function POST(req: NextRequest) {
     const workspace = await Workspace.findById(user?.workspaceId)
     if (!workspace) return NextResponse.json({ error: 'No workspace' }, { status: 404 })
 
-    const { topic, pillar } = parsed.data
+    const { topic, pillar, voiceType } = parsed.data
 
     const brand = workspace.brandSettings ?? {}
 
     const [post, imageGuidance] = await Promise.all([
-      generateXPost({ topic, contentBrief: topic, pillar: pillar as ContentPillar }),
+      generateXPost({ topic, contentBrief: topic, pillar: pillar as ContentPillar, voiceType }),
       generateImageGuidance({
         topic,
         pillar: pillar as ContentPillar,

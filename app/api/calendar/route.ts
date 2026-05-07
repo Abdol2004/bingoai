@@ -37,9 +37,10 @@ export async function POST(req: NextRequest) {
     const {
       startDate,
       endDate,
-      postTimes = ['10:00'],   // array — one time per post slot per day
+      postTimes = ['10:00'],
       pillars = ['educational', 'engagement', 'value', 'ragebait'],
       postsPerDay = 1,
+      voiceType = 'personal',
     } = body
 
     const preferredTime = Array.isArray(postTimes) ? postTimes[0] : postTimes
@@ -75,6 +76,7 @@ export async function POST(req: NextRequest) {
       preferredTime,
       campaignFocus: workspace.campaignFocus,
       campaignBrief: workspace.campaignBrief,
+      voiceType,
     })
 
     const calendar = await CalendarWeek.create({
@@ -108,6 +110,7 @@ export async function POST(req: NextRequest) {
           contentBrief: p.contentBrief,
           imagePrompt: p.imagePrompt,
           contentPillar: p.contentPillar ?? pillars[i % pillars.length],
+          voiceType,
           scheduledAt,
           status: 'draft',
         }

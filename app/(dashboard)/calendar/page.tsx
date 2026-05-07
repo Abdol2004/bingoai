@@ -68,6 +68,7 @@ export default function CalendarPage() {
   const [postsPerDay, setPostsPerDay] = useState(1)
   const [postTimes, setPostTimes]   = useState(['10:00', '18:00', '21:00'])
   const [selectedPillars, setSelectedPillars] = useState<Pillar[]>(['educational','engagement','value','ragebait'])
+  const [voiceType, setVoiceType]             = useState<'personal' | 'brand' | null>(null)
 
   const loadCalendars = useCallback(async () => {
     const res  = await fetch('/api/calendar')
@@ -110,6 +111,7 @@ export default function CalendarPage() {
   }
 
   async function generateCalendar() {
+    if (!voiceType) { setError('Please select account type first'); return }
     if (selectedPillars.length === 0) { setError('Select at least one content pillar'); return }
     setGenerating(true); setError(''); setShowGenModal(false)
     try {
@@ -121,6 +123,7 @@ export default function CalendarPage() {
           postTimes: postTimes.slice(0, postsPerDay),
           postsPerDay,
           pillars: selectedPillars,
+          voiceType,
         }),
       })
       const json = await res.json()
@@ -204,7 +207,7 @@ export default function CalendarPage() {
           <h1 className="font-display font-800 text-3xl" style={{ color: 'var(--text)' }}>Content Calendar</h1>
           <p className="mt-1 text-sm" style={{ color: 'var(--text-muted)' }}>Plan, preview captions, and approve your X posts.</p>
         </div>
-        <button onClick={() => setShowGenModal(true)} className="btn-primary" disabled={generating}>
+        <button onClick={() => { setVoiceType(null); setShowGenModal(true) }} className="btn-primary" disabled={generating}>
           {generating ? <><Loader2 size={14} className="animate-spin" /> Generating...</> : <><Plus size={14} /> New calendar</>}
         </button>
       </div>
@@ -219,6 +222,31 @@ export default function CalendarPage() {
             <div className="flex items-center justify-between">
               <h2 className="font-display font-700 text-xl" style={{ color: 'var(--text)' }}>Generate calendar</h2>
               <button onClick={() => setShowGenModal(false)} style={{ color: 'var(--text-muted)' }}><XIcon size={18} /></button>
+            </div>
+
+            {/* Account type — must pick first */}
+            <div>
+              <label className="label">Account type</label>
+              <div className="grid grid-cols-2 gap-2">
+                {([
+                  { id: 'personal', label: 'Personal', sub: 'I / me / my' },
+                  { id: 'brand',    label: 'Brand / Company', sub: 'We / our / us' },
+                ] as const).map(v => (
+                  <button
+                    key={v.id}
+                    onClick={() => setVoiceType(v.id)}
+                    className="text-left px-4 py-3 rounded-xl border transition-all"
+                    style={{
+                      background:  voiceType === v.id ? 'rgba(245,158,11,0.15)' : 'var(--bg)',
+                      borderColor: voiceType === v.id ? 'rgba(245,158,11,0.6)'  : 'var(--border)',
+                      color:       voiceType === v.id ? 'var(--primary)'         : 'var(--text-muted)',
+                    }}
+                  >
+                    <div className="font-semibold text-sm">{v.label}</div>
+                    <div className="text-xs mt-0.5 opacity-70">{v.sub}</div>
+                  </button>
+                ))}
+              </div>
             </div>
 
             {/* Date range */}
@@ -298,7 +326,7 @@ export default function CalendarPage() {
           <CalendarDays size={44} className="mx-auto mb-4" style={{ color: 'var(--primary)', opacity: 0.4 }} />
           <h2 className="font-display font-700 text-xl mb-2" style={{ color: 'var(--text)' }}>No calendar yet</h2>
           <p className="text-sm mb-6" style={{ color: 'var(--text-muted)' }}>Set your strategy first, then generate.</p>
-          <button onClick={() => setShowGenModal(true)} className="btn-primary">
+          <button onClick={() => { setVoiceType(null); setShowGenModal(true) }} className="btn-primary">
             <Plus size={14} /> Generate first calendar
           </button>
         </div>

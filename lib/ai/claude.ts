@@ -81,8 +81,9 @@ export async function generateCalendar(params: {
   preferredTime?: string
   campaignFocus?: string
   campaignBrief?: string
+  voiceType?: 'personal' | 'brand'
 }): Promise<{ posts: GeneratedPost[]; overallStrategy: string }> {
-  const { niche, tone, goals, frequency, strategy, weekStart, pillars = ['educational','engagement','value','ragebait'], preferredTime = '10:00', campaignFocus, campaignBrief } = params
+  const { niche, tone, goals, frequency, strategy, weekStart, pillars = ['educational','engagement','value','ragebait'], preferredTime = '10:00', campaignFocus, campaignBrief, voiceType = 'personal' } = params
 
   const totalDays = 7
   const dates = Array.from({ length: totalDays }, (_, i) =>
@@ -119,6 +120,8 @@ Posts needed: ${frequency}
 Available dates: ${dates.join(', ')}
 Preferred posting time: ${preferredTime}
 Strategy: ${strategy}${campaignFocus ? `\n\nCampaign this period: ${campaignFocus}` : ''}${campaignBrief ? `\nCampaign details: ${campaignBrief}\n\nIMPORTANT: Every post must serve this campaign. Topics, hooks, and angles must connect back to it.` : ''}
+
+Voice: ${voiceType === 'brand' ? 'Use "we", "our", "us" — this is a brand/company account' : 'Use "I", "me", "my" — this is a personal account'}
 
 Content pillars to use (distribute evenly):
 ${pillarDescriptions}

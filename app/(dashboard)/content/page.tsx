@@ -13,9 +13,10 @@ const PILLARS: { id: Pillar; label: string; desc: string }[] = [
 ]
 
 export default function ContentPage() {
-  const [topic, setTopic]   = useState('')
-  const [pillar, setPillar] = useState<Pillar>('value')
-  const [loading, setLoading] = useState(false)
+  const [topic, setTopic]         = useState('')
+  const [pillar, setPillar]       = useState<Pillar>('value')
+  const [voiceType, setVoiceType] = useState<'personal' | 'brand'>('personal')
+  const [loading, setLoading]     = useState(false)
   const [error, setError]   = useState('')
   const [result, setResult] = useState<{
     post: string
@@ -32,7 +33,7 @@ export default function ContentPage() {
       const res  = await fetch('/api/content/generate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ topic, pillar }),
+        body: JSON.stringify({ topic, pillar, voiceType }),
       })
       const json = await res.json()
       if (!res.ok) throw new Error(json.error ?? 'Failed')
@@ -71,6 +72,28 @@ export default function ContentPage() {
             value={topic}
             onChange={e => setTopic(e.target.value)}
           />
+        </div>
+
+        {/* Voice type */}
+        <div>
+          <label className="label">Account type</label>
+          <div className="flex gap-2">
+            {([
+              { id: 'personal' as const, label: 'Personal', sub: 'I / me' },
+              { id: 'brand'    as const, label: 'Brand',    sub: 'We / our' },
+            ]).map(v => (
+              <button key={v.id} onClick={() => setVoiceType(v.id)}
+                      className="flex-1 text-left px-4 py-2.5 rounded-xl border transition-all"
+                      style={{
+                        background:  voiceType === v.id ? 'rgba(245,158,11,0.15)' : 'var(--bg)',
+                        borderColor: voiceType === v.id ? 'rgba(245,158,11,0.55)' : 'var(--border)',
+                        color:       voiceType === v.id ? 'var(--primary)'         : 'var(--text-muted)',
+                      }}>
+                <div className="font-semibold text-sm">{v.label}</div>
+                <div className="text-xs opacity-60">{v.sub}</div>
+              </button>
+            ))}
+          </div>
         </div>
 
         {/* Pillar selector */}
